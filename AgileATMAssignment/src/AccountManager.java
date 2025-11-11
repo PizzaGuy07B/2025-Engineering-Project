@@ -1,4 +1,9 @@
+package agile;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,11 +12,16 @@ public class AccountManager {
     private ArrayList<Account> accounts;
 
     public AccountManager() {
-        accounts = new ArrayList<>();
-        // Seed with example data
-        accounts.add(new Account("SeanD", "1111"));
-        accounts.add(new Account("EvanB", "2222"));
-        accounts.add(new Account("AlessandroB", "3333"));
+        try {
+        	FileInputStream fi = new FileInputStream("account.ser");
+			ObjectInputStream oi = new ObjectInputStream(fi);
+			
+			accounts = (ArrayList<Account>)oi.readObject();
+        }
+        catch (Exception e)
+        {
+        	accounts = new ArrayList<Account>();
+        }
     }
 
     public Account login() throws ValidateAccountExceptionHandler {
@@ -44,9 +54,26 @@ public class AccountManager {
         String pin = sc.next();
 
         if (ValidateAccount.validateUsername(userName) && ValidateAccount.validatePin(pin)) {
-            Account acc = new Account(userName, pin);
+        	for (Account a : accounts) {
+                if (a.getUsername().equals(userName)) {
+                	System.out.println("Username already exists. Try again.");
+                    return null;
+                }
+            }
+        	Account acc = new Account(userName, pin);
             accounts.add(acc);
             System.out.println("Account created successfully!");
+            
+            try {
+            	FileOutputStream fo = new FileOutputStream("account.ser");
+    			ObjectOutputStream oo = new ObjectOutputStream(fo);
+    			oo.writeObject(accounts);
+            }
+            catch (Exception e)
+            {
+            	e.printStackTrace();
+            }
+            
             return acc;
         } else {
             System.out.println("Invalid username or PIN. Try again.");
