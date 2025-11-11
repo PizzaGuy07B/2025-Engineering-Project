@@ -54,7 +54,13 @@ public class AccountManager {
         String pin = sc.next();
 
         if (ValidateAccount.validateUsername(userName) && ValidateAccount.validatePin(pin)) {
-            Account acc = new Account(userName, pin);
+        	for (Account a : accounts) {
+                if (a.getUsername().equals(userName)) {
+                	System.out.println("Username already exists. Try again.");
+                    return null;
+                }
+            }
+        	Account acc = new Account(userName, pin);
             accounts.add(acc);
             System.out.println("Account created successfully!");
             
