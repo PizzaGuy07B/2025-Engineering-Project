@@ -1,3 +1,7 @@
+
+package agile;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 public class main {
@@ -66,6 +70,15 @@ public class main {
                 break;
             case 4:
             	runningAtm = false;
+            	try {
+                	FileOutputStream fo = new FileOutputStream("account.ser");
+        			ObjectOutputStream oo = new ObjectOutputStream(fo);
+        			oo.writeObject(account.getAccounts());
+                }
+                catch (Exception e)
+                {
+                	e.printStackTrace();
+                }
                 System.out.println("Thank you for using the ATM!");
                 break;
             default:
