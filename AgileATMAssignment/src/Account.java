@@ -5,6 +5,20 @@ public class Account {
 	private String pin;
 	private double balance;
 	private double savings;
+	private boolean accountFrozen = false;
+
+	public boolean accountFrozen() {      
+        return accountFrozen;
+	}
+
+	public void freezeAccount() {            
+        accountFrozen = true;
+	}
+
+	public void unfreezeAccount() {          
+        accountFrozen = false;
+	}
+
 	
 	public Account(String username, String pin) {
 		this.username = username;

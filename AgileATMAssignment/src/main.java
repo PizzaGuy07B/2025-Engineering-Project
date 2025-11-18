@@ -51,7 +51,9 @@ public class main {
 	        System.out.println("1. Withdraw");
 	        System.out.println("2. Deposit");
 	        System.out.println("3. Check Balance");
-	        System.out.println("4. Exit");
+            System.out.println("4. Freeze Account");
+            System.out.println("5. Unfreeze Account");
+            System.out.println("6. Exit");
 	        System.out.print("Choose: ");
 	        int choice = sc.nextInt();
 	        switch (choice) {
@@ -68,7 +70,17 @@ public class main {
             case 3:
                 System.out.println("Your balance is: €" + current.getBalance());
                 break;
+
             case 4:
+                current.freeze();
+                System.out.println("Your account is now FROZEN.");
+                break;
+
+            case 5:
+                current.unfreeze();
+                System.out.println("Your account is now UNFROZEN.");
+                break;
+            case 6:
             	runningAtm = false;
             	try {
                 	FileOutputStream fo = new FileOutputStream("account.ser");
