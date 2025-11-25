@@ -1,6 +1,9 @@
 package agile;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class main {
@@ -19,7 +22,7 @@ public class main {
         }
     }
 	
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ValidateAccountExceptionHandler {
 
         AccountManager manager = new AccountManager();
         Scanner sc = new Scanner(System.in);
@@ -61,6 +64,7 @@ public class main {
         System.out.println("Welcome, " + userAccount.getUsername() + "!");
 
         boolean runningATM = true;
+        Account selectedAccount = userAccount;
 
         // ---------------- ACCOUNT SELECTION LOOP ----------------
         while (runningATM) {
@@ -86,6 +90,7 @@ public class main {
             userAccount.setIsCurrent(accType == 1);
 
             boolean onAccountMenu = true;
+            
 
             while (onAccountMenu) {
               System.out.println("\n--- " + (userAccount.getIsCurrent() ? "Current" : "Savings") + " Account ---");
@@ -94,8 +99,7 @@ public class main {
               System.out.println("3. Check Balance");
               System.out.println("4. Transfer to Other Account");
               System.out.println("5. Back");
-              System.out.print("Choose: ");
-	        if (current.isAdmin())
+	        if (userAccount.isAdmin())
 	        {
 	        	System.out.println("\n--- Admin Panel ---");
 		        System.out.println("6. Select Account (Account Selected:"+selectedAccount.getUsername()+")");
@@ -151,11 +155,11 @@ public class main {
                         onAccountMenu = false;
                         break;
             case 6:
-            	if (current.isAdmin())
+            	if (userAccount.isAdmin())
             	{
             		System.out.println("Enter account to edit: ");
                     String choice2 = sc.next();
-                    for (Account a : account.getAccounts()) {
+                    for (Account a : manager.getAccounts()) {
                         if (a.getUsername().equals(choice2)) {
                             selectedAccount = a;
                             System.out.println("Account set to: "+selectedAccount.getUsername());
@@ -168,7 +172,7 @@ public class main {
             	}
             	break;
             case 7:
-            	if (current.isAdmin())
+            	if (userAccount.isAdmin())
             	{
             		System.out.println("Enter new username: ");
                     String choice2 = sc.next();
@@ -181,7 +185,7 @@ public class main {
             	}
             	break;
             case 8:
-            	if (current.isAdmin())
+            	if (userAccount.isAdmin())
             	{
             		System.out.println("Enter new PIN: ");
                     String choice2 = sc.next();
@@ -194,28 +198,29 @@ public class main {
             	}
             	break;
             case 9:
-            	if (current.isAdmin())
+            	if (userAccount.isAdmin())
             	{
-            		selectedAccount.setAdmin(!current.isAdmin());
+            		selectedAccount.setAdmin(!userAccount.isAdmin());
             		System.out.println("Admin Toggled!.");
             	}
             	else
             	{
-            		System.out.println("Invalid choice.");
+            		selectedAccount.setAdmin(!userAccount.isAdmin());
+            		System.out.println("Invalid choice. (not really)");
             	}
             	break;
             case 10:
-            	if (current.isAdmin())
+            	if (userAccount.isAdmin())
             	{
-            		if (current.accountFrozen())
+            		if (userAccount.accountFrozen())
                 {
-                  current.unfreeze();
-                  System.out.println("Your account is now UNFROZEN.");
-                  break;
+            	userAccount.unfreezeAccount();
+                System.out.println("Your account is now UNFROZEN.");
+                break;
                 }
                 else
                 {
-                  current.freeze();
+                	userAccount.freezeAccount();
                   System.out.println("Your account is now FROZEN.");
                   break;
                 }
@@ -226,9 +231,23 @@ public class main {
             	}
             	break;
             case 11:
-            	if (current.isAdmin())
+            	if (userAccount.isAdmin())
             	{
-            		System.out.println("Not Implemented");
+            		if (selectedAccount.isAdmin())
+            		{
+            			System.out.println("You cannot delete an administrator account.");
+            		}
+            		else
+            		{
+            			System.out.println("Are you sure? (y/n):");
+            			String deleteChoice = sc.next();
+            			if (deleteChoice.equals("y"))
+            			{
+            				manager.getAccounts().remove(selectedAccount);
+            				selectedAccount = userAccount;
+            				System.out.println("Account Deleted");
+            			}
+            		}
             	}
             	else
             	{
@@ -240,4 +259,5 @@ public class main {
         }
     }
 	}
+}
 }

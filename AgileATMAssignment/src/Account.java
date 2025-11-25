@@ -8,7 +8,8 @@ public class Account implements Serializable{
 	private String pin;
 	private double balance;
 	private double savings;
-  boolean admin;
+	boolean admin;
+	boolean isCurrent;
 	private boolean accountFrozen = false;
 
 	public boolean accountFrozen() {      

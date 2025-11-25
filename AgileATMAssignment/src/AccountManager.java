@@ -85,7 +85,7 @@ public class AccountManager {
     }
 
     public void deposit(Account a, double money) {
-        if (a.accountFrozen = true)
+        if (a.accountFrozen())
         {
             System.out.println("Your account is frozen, deposit failed.");
             return;
@@ -97,7 +97,7 @@ public class AccountManager {
   
   // ------------------ WITHDRAW --------------------
     public void withdraw(Account a, double money) {
-        if (a.accountFrozen = true)
+        if (a.accountFrozen())
         {
             System.out.println("Your account is frozen, withdrawal failed.");
             return;
