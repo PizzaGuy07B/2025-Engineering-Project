@@ -1,3 +1,5 @@
+package agile;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -11,24 +13,20 @@ public class AccountManager {
 
     public AccountManager() {
         try {
-            FileInputStream fi = new FileInputStream("account.ser");
-            ObjectInputStream oi = new ObjectInputStream(fi);
-            accounts = (ArrayList<Account>) oi.readObject();
-            oi.close();
-            fi.close();
-        } catch (Exception e) {
-            accounts = new ArrayList<>();
-            accounts.add(new Account("SeanD", "1111"));
-            accounts.add(new Account("EvanB", "2222"));
-            accounts.add(new Account("AlessandroB", "3333"));
+        	FileInputStream fi = new FileInputStream("account.ser");
+          ObjectInputStream oi = new ObjectInputStream(fi);
+
+          accounts = (ArrayList<Account>)oi.readObject();
+          oi.close();
+           fi.close();
+        }
+        catch (Exception e)
+        {
+        	accounts = new ArrayList<Account>();
         }
     }
-
-    public ArrayList<Account> getAccounts() {
-        return accounts;
-    }
-
-    // Save accounts to file
+  
+  // Save accounts to file
     private void saveAccounts() {
         try {
             FileOutputStream fo = new FileOutputStream("account.ser");
@@ -86,15 +84,24 @@ public class AccountManager {
         return acc;
     }
 
-    // ------------------ DEPOSIT --------------------
     public void deposit(Account a, double money) {
+        if (a.accountFrozen = true)
+        {
+            System.out.println("Your account is frozen, deposit failed.");
+            return;
+        }
         a.addToBalance(money);
-        System.out.println("€" + money + " added.");
+        System.out.println("€" + money + " added to account.");
         saveAccounts();
     }
-
-    // ------------------ WITHDRAW --------------------
+  
+  // ------------------ WITHDRAW --------------------
     public void withdraw(Account a, double money) {
+        if (a.accountFrozen = true)
+        {
+            System.out.println("Your account is frozen, withdrawal failed.");
+            return;
+        }
         if (a.getIsCurrent() && a.getBalance() < money) {
             System.out.println("Insufficient funds in current account!");
             return;
@@ -108,5 +115,8 @@ public class AccountManager {
         System.out.println("€" + money + " withdrawn.");
         saveAccounts();
     }
-}
 
+    public ArrayList<Account> getAccounts() {
+        return accounts;
+    }
+}

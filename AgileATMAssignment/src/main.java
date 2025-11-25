@@ -1,13 +1,9 @@
-import java.io.FileInputStream;
+package agile;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class main {
-	
 	private ArrayList<Account> accounts;
 	
 	public main() {
@@ -92,19 +88,27 @@ public class main {
             boolean onAccountMenu = true;
 
             while (onAccountMenu) {
-
-                System.out.println("\n--- " + (userAccount.getIsCurrent() ? "Current" : "Savings") + " Account ---");
-                System.out.println("1. Deposit");
-                System.out.println("2. Withdraw");
-                System.out.println("3. Check Balance");
-                System.out.println("4. Transfer to Other Account");
-                System.out.println("5. Back");
-                System.out.print("Choose: ");
-                int choice = sc.nextInt();
-
-                switch (choice) {
-
-                    case 1: // DEPOSIT
+              System.out.println("\n--- " + (userAccount.getIsCurrent() ? "Current" : "Savings") + " Account ---");
+              System.out.println("1. Deposit");
+              System.out.println("2. Withdraw");
+              System.out.println("3. Check Balance");
+              System.out.println("4. Transfer to Other Account");
+              System.out.println("5. Back");
+              System.out.print("Choose: ");
+	        if (current.isAdmin())
+	        {
+	        	System.out.println("\n--- Admin Panel ---");
+		        System.out.println("6. Select Account (Account Selected:"+selectedAccount.getUsername()+")");
+		        System.out.println("7. Change Username");
+		        System.out.println("8. Change PIN");
+		        System.out.println("9. Toggle Admin");
+		        System.out.println("10. Toggle Freeze");
+		        System.out.println("11. Delete Account");
+	        }
+	        System.out.print("Choose: ");
+	        int choice = sc.nextInt();
+	        switch (choice) {
+            case 1: // DEPOSIT
                         System.out.print("Enter amount: ");
                         manager.deposit(userAccount, sc.nextDouble());
                         break;
@@ -146,12 +150,94 @@ public class main {
                     case 5:
                         onAccountMenu = false;
                         break;
-
-                    default:
-                        System.out.println("Invalid choice.");
+            case 6:
+            	if (current.isAdmin())
+            	{
+            		System.out.println("Enter account to edit: ");
+                    String choice2 = sc.next();
+                    for (Account a : account.getAccounts()) {
+                        if (a.getUsername().equals(choice2)) {
+                            selectedAccount = a;
+                            System.out.println("Account set to: "+selectedAccount.getUsername());
+                        }
+                    }
+            	}
+            	else
+            	{
+            		System.out.println("Invalid choice.");
+            	}
+            	break;
+            case 7:
+            	if (current.isAdmin())
+            	{
+            		System.out.println("Enter new username: ");
+                    String choice2 = sc.next();
+                    selectedAccount.setUsername(choice2);
+                    System.out.println("Username set to: "+selectedAccount.getUsername());
+            	}
+            	else
+            	{
+            		System.out.println("Invalid choice.");
+            	}
+            	break;
+            case 8:
+            	if (current.isAdmin())
+            	{
+            		System.out.println("Enter new PIN: ");
+                    String choice2 = sc.next();
+                    selectedAccount.setPin(choice2);
+                    System.out.println("PIN set to: "+selectedAccount.getPin());
+            	}
+            	else
+            	{
+            		System.out.println("Invalid choice.");
+            	}
+            	break;
+            case 9:
+            	if (current.isAdmin())
+            	{
+            		selectedAccount.setAdmin(!current.isAdmin());
+            		System.out.println("Admin Toggled!.");
+            	}
+            	else
+            	{
+            		System.out.println("Invalid choice.");
+            	}
+            	break;
+            case 10:
+            	if (current.isAdmin())
+            	{
+            		if (current.accountFrozen())
+                {
+                  current.unfreeze();
+                  System.out.println("Your account is now UNFROZEN.");
+                  break;
                 }
-            }
+                else
+                {
+                  current.freeze();
+                  System.out.println("Your account is now FROZEN.");
+                  break;
+                }
+            	}
+            	else
+            	{
+            		System.out.println("Invalid choice.");
+            	}
+            	break;
+            case 11:
+            	if (current.isAdmin())
+            	{
+            		System.out.println("Not Implemented");
+            	}
+            	else
+            	{
+            		System.out.println("Invalid choice.");
+            	}
+            	break;
+            default:
+                System.out.println("Invalid choice.");
         }
-        sc.close();
     }
+	}
 }
