@@ -1,10 +1,13 @@
+package agile;
 
+import java.io.Serializable;
 
-public class Account {
+public class Account implements Serializable{
 	private String username;
 	private String pin;
 	private double balance;
 	private double savings;
+  boolean admin;
 	private boolean accountFrozen = false;
 
 	public boolean accountFrozen() {      
@@ -18,7 +21,6 @@ public class Account {
 	public void unfreezeAccount() {          
         accountFrozen = false;
 	}
-
 	
 	public Account(String username, String pin) {
 		this.username = username;
@@ -64,4 +66,40 @@ public class Account {
 		savings += money;
 		balance -= money;
 	}
+	
+	public void setUsername(String username) throws ValidateAccountExceptionHandler
+	{
+		if (ValidateAccount.validateUsername(username))
+		{
+			this.username = username;
+			System.out.println("Username Changed: "+username);
+		}
+		else
+		{
+			System.out.println("Invalid Entry");
+		}
+	}
+	
+	public void setPin(String pin) throws ValidateAccountExceptionHandler
+	{
+		if (ValidateAccount.validatePin(pin))
+		{
+			this.pin = pin;
+			System.out.println("PIN Changed: "+pin);
+		}
+		else
+		{
+			System.out.println("Invalid Entry");
+		}
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+	
+	
 }
