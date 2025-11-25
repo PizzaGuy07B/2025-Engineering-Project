@@ -61,7 +61,7 @@ public class main {
 		        System.out.println("6. Change Username");
 		        System.out.println("7. Change PIN");
 		        System.out.println("8. Toggle Admin");
-		        System.out.println("9. Freeze Account");
+		        System.out.println("9. Toggle Freeze");
 		        System.out.println("0. Delete Account");
 	        }
 	        System.out.print("Choose: ");
@@ -150,7 +150,18 @@ public class main {
             case 9:
             	if (current.isAdmin())
             	{
-            		System.out.println("Not Implemented");
+            		if (current.accountFrozen())
+                {
+                  current.unfreeze();
+                  System.out.println("Your account is now UNFROZEN.");
+                  break;
+                }
+                else
+                {
+                  current.freeze();
+                  System.out.println("Your account is now FROZEN.");
+                  break;
+                }
             	}
             	else
             	{

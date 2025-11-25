@@ -82,11 +82,21 @@ public class AccountManager {
     }
 
     public void deposit(Account a, double money) {
+        if (a.accountFrozen = true)
+        {
+            System.out.println("Your account is frozen, deposit failed.");
+            return;
+        }
         a.addToBalance(money);
         System.out.println("€" + money + " added to account.");
     }
 
     public void withdraw(Account a, double money) {
+        if (a.accountFrozen = true)
+        {
+            System.out.println("Your account is frozen, withdrawal failed.");
+            return;
+        }
         if (a.getBalance() >= money) {
             a.withdrawFromBalance(money);
             System.out.println("€" + money + " withdrawn from account.");
