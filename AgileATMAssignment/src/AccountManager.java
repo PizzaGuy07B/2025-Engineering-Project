@@ -14,71 +14,74 @@ public class AccountManager {
     public AccountManager() {
         try {
         	FileInputStream fi = new FileInputStream("account.ser");
-			ObjectInputStream oi = new ObjectInputStream(fi);
-			
-			accounts = (ArrayList<Account>)oi.readObject();
+          ObjectInputStream oi = new ObjectInputStream(fi);
+
+          accounts = (ArrayList<Account>)oi.readObject();
+          oi.close();
+           fi.close();
         }
         catch (Exception e)
         {
         	accounts = new ArrayList<Account>();
         }
     }
+  
+  // Save accounts to file
+    private void saveAccounts() {
+        try {
+            FileOutputStream fo = new FileOutputStream("account.ser");
+            ObjectOutputStream oo = new ObjectOutputStream(fo);
+            oo.writeObject(accounts);
+            oo.close();
+            fo.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    // ------------------ LOGIN --------------------
     public Account login() throws ValidateAccountExceptionHandler {
         Scanner sc = new Scanner(System.in);
         System.out.print("Please enter your username: ");
-        String userName = sc.next();
+        String user = sc.next();
 
         System.out.print("Please enter your PIN: ");
         String pin = sc.next();
 
-        if (ValidateAccount.validateUsername(userName) && ValidateAccount.validatePin(pin)) {
-            for (Account a : accounts) {
-                if (a.getUsername().equals(userName) && a.getPin().equals(pin)) {
-                    return a;
-                }
-            }
-            System.out.println("Username or password was incorrect.");
-        } else {
-            System.out.println("Invalid username or PIN format.");
+        if (!ValidateAccount.validateUsername(user) ||
+            !ValidateAccount.validatePin(pin)) {
+            throw new ValidateAccountExceptionHandler("Invalid username or PIN format.");
         }
-        return null;
+
+        for (Account a : accounts) {
+            if (a.getUsername().equals(user) && a.getPin().equals(pin)) {
+                return a;
+            }
+        }
+
+        throw new ValidateAccountExceptionHandler("Username or PIN incorrect.");
     }
 
+    // ------------------ CREATE ACCOUNT --------------------
     public Account createAccount() throws ValidateAccountExceptionHandler {
         Scanner sc = new Scanner(System.in);
         System.out.print("Please enter your username: ");
-        String userName = sc.next();
+        String user = sc.next();
 
         System.out.print("Please enter your PIN: ");
         String pin = sc.next();
 
-        if (ValidateAccount.validateUsername(userName) && ValidateAccount.validatePin(pin)) {
-        	for (Account a : accounts) {
-                if (a.getUsername().equals(userName)) {
-                	System.out.println("Username already exists. Try again.");
-                    return null;
-                }
-            }
-        	Account acc = new Account(userName, pin);
-            accounts.add(acc);
-            System.out.println("Account created successfully!");
-            
-            try {
-            	FileOutputStream fo = new FileOutputStream("account.ser");
-    			ObjectOutputStream oo = new ObjectOutputStream(fo);
-    			oo.writeObject(accounts);
-            }
-            catch (Exception e)
-            {
-            	e.printStackTrace();
-            }
-            
-            return acc;
-        } else {
-            System.out.println("Invalid username or PIN. Try again.");
-            return null;
+        if (!ValidateAccount.validateUsername(user) ||
+            !ValidateAccount.validatePin(pin)) {
+            throw new ValidateAccountExceptionHandler("Invalid username or PIN.");
         }
+
+        Account acc = new Account(user, pin);
+        accounts.add(acc);
+        saveAccounts();
+
+        System.out.println("Account created successfully!");
+        return acc;
     }
 
     public void deposit(Account a, double money) {
@@ -89,24 +92,31 @@ public class AccountManager {
         }
         a.addToBalance(money);
         System.out.println("€" + money + " added to account.");
+        saveAccounts();
     }
-
+  
+  // ------------------ WITHDRAW --------------------
     public void withdraw(Account a, double money) {
         if (a.accountFrozen = true)
         {
             System.out.println("Your account is frozen, withdrawal failed.");
             return;
         }
-        if (a.getBalance() >= money) {
-            a.withdrawFromBalance(money);
-            System.out.println("€" + money + " withdrawn from account.");
-        } else {
-            System.out.println("Insufficient funds!");
+        if (a.getIsCurrent() && a.getBalance() < money) {
+            System.out.println("Insufficient funds in current account!");
+            return;
         }
+        if (!a.getIsCurrent() && a.getSavings() < money) {
+            System.out.println("Insufficient funds in savings!");
+            return;
+        }
+
+        a.withdrawFromBalance(money);
+        System.out.println("€" + money + " withdrawn.");
+        saveAccounts();
     }
 
     public ArrayList<Account> getAccounts() {
         return accounts;
     }
 }
-

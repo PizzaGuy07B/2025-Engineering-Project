@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import junit.framework.TestCase;
 
 public class AccountManagerTest extends TestCase{
@@ -7,7 +9,7 @@ public class AccountManagerTest extends TestCase{
     public void setup() {
         manager = new AccountManager();
     }
-    
+   
 	//Test No: 1
     //Objective: Test valid login
     //Input(s): username = "SeanD", pin = "1234"
@@ -29,6 +31,7 @@ public class AccountManagerTest extends TestCase{
     //Input(s): username = "SeanD", pin = "9999"
     //Expected Output: Exception message "Invalid login details"
 
+   
     public void testLogin_InvalidPin() {
         try {
             boolean found = manager.getAccounts().stream()
