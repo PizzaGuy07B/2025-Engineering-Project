@@ -24,7 +24,7 @@ public class Account implements Serializable{
         accountFrozen = false;
 	}
 	
-	public Account(String username, String pin) {
+	public Account(String username, String pin) throws AccountExceptionHandler {
 		this.username = username;
 		this.pin = pin;
 		this.balance = 0;
@@ -32,15 +32,15 @@ public class Account implements Serializable{
 		isCurrent = false;
 	}
 
-    public String getUsername() {
+    public String getUsername() throws AccountExceptionHandler  {
         return username;
     }
 
-    public String getPin() {
+    public String getPin() throws AccountExceptionHandler  {
         return pin;
     }
 
-    public double getBalance() {
+    public double getBalance() throws AccountExceptionHandler  {
         return balance;
     }
 

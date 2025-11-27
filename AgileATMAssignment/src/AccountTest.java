@@ -1,3 +1,5 @@
+package agile;
+
 import junit.framework.TestCase;
 
 public class AccountTest extends TestCase {
@@ -10,9 +12,9 @@ public class AccountTest extends TestCase {
     public void testAccountCreation() {
         try {
             Account acc = new Account("Tony", "1234");
-            assertEquals("John", acc.getUsername());
+            assertEquals("Tony", acc.getUsername());
             assertEquals("1234", acc.getPin());
-            assertEquals(0.0, acc.getBalance());
+            assertEquals(0.0, acc.getBalance(), 0.001);
         }
         catch (AccountExceptionHandler e) {
             fail("No Exception Expected");
@@ -27,8 +29,9 @@ public class AccountTest extends TestCase {
     public void testDeposit() {
         try {
             Account acc = new Account("Tony", "1234");
+            acc.setIsCurrent(true);
             acc.addToBalance(100.0);
-            assertEquals(100.0, acc.getBalance());
+            assertEquals(100.0, acc.getBalance(), 0.001);
         }
         catch (AccountExceptionHandler e) {
             fail("No Exception Expected");
@@ -43,9 +46,10 @@ public class AccountTest extends TestCase {
     public void testWithdraw() {
         try {
             Account acc = new Account("Tony", "1234");
+            acc.setIsCurrent(true);
             acc.addToBalance(100.0);
             acc.withdrawFromBalance(50.0);
-            assertEquals(50.0, acc.getBalance());
+            assertEquals(50.0, acc.getBalance(), 0.001);
         }
         catch (AccountExceptionHandler e) {
             fail("No Exception Expected");
@@ -71,3 +75,4 @@ public class AccountTest extends TestCase {
         }
     }
 }
+
